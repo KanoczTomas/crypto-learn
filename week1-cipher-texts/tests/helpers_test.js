@@ -11,18 +11,18 @@ describe('helper function tests:', function(){
             (function(){helpers.xorStrings('a' , 3)}).should.throw('Arguments must be strings!');
             (function(){helpers.xorStrings('a', undefined)}).should.throw('Too few arguments! Provide at least 2 strings!');
         });
-        it('should return a string', function(){
-            helpers.xorStrings('a', 'b').should.be.a.String();
+        it('should return a Buffer', function(){
+            helpers.xorStrings('a', 'b').should.be.a.instanceOf(Buffer);
         });
-        it('should return a string with length min(input1,input2)', function(){
+        it('should return a buffer with length min(input1,input2)', function(){
             helpers.xorStrings('abcd', '123').length.should.be.equal(3);
             helpers.xorStrings('12345', 'abc').length.should.be.equal(3);
             helpers.xorStrings('1', 'a').length.should.be.equal(1);
             helpers.xorStrings('1', '').length.should.be.equal(0);
         });
         it('should xor 2 strings correctly', function(){
-            helpers.xorStrings('this is a test message', 'this is another test').should.be.equal(Buffer.from('0000000000000000004e1b111b11524d11160015', 'hex'));
-            helpers.xorStrings('xor with self', 'xor with self').should.be.equal('00000000000000000000000000');
+            (helpers.xorStrings('this is a test message', 'this is another test').equals(Buffer.from('0000000000000000004e1b111b11524d11160015', 'hex'))).should.be.true();;
+            (helpers.xorStrings('xor with self', 'xor with self').equals(Buffer.from('00000000000000000000000000', 'hex'))).should.be.true();
         });
     });
     describe('xorStringsInHex', function(){
