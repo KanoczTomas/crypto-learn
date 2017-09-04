@@ -1,0 +1,24 @@
+{
+  "name": "week1-cipher-texts",
+  "version": "1.0.0",
+  "description": "week1 assignment script to break many times pad",
+  "main": "solve.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "crypto",
+    "many",
+    "times",
+    "pad"
+  ],
+  "author": "Tomas Kanocz",
+  "license": "MIT",
+  "dependencies": {
+    "mocha": "^3.5.0",
+    "should": "^12.0.0"
+  }
+}

@@ -1,0 +1,4 @@
+git prune -n
+git cat-file -p <#blob>
+
+... I accidentaly deleted everything in an uncommited repo with git rm -r -f ... this got it back!
