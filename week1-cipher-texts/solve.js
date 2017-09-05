@@ -1,6 +1,6 @@
 'use strict';
 //the samples were all encrypted with the same key as c = k xor m;
-
+var helpers = require('./helpers');
 var samples = [
     '315c4eeaa8b5f8aaf9174145bf43e1784b8fa00dc71d885a804e5ee9fa40b16349c146fb778cdf2d3aff021dfff5b403b510d0d0455468aeb98622b137dae857553ccd8883a7bc37520e06e515d22c954eba5025b8cc57ee59418ce7dc6bc41556bdb36bbca3e8774301fbcaa3b83b220809560987815f65286764703de0f3d524400a19b159610b11ef3e',
     '234c02ecbbfbafa3ed18510abd11fa724fcda2018a1a8342cf064bbde548b12b07df44ba7191d9606ef4081ffde5ad46a5069d9f7f543bedb9c861bf29c7e205132eda9382b0bc2c5c4b45f919cf3a9f1cb74151f6d551f4480c82b2cb24cc5b028aa76eb7b4ab24171ab3cdadb8356f',
@@ -16,134 +16,25 @@ var samples = [
 
 //c1 = k xor m1
 //c2 = k xor m2 => c1 xor c2 = (k xor m1)xor(k xor m2) = (k xor k) xor (m1 xor m2) = m1 xor m2
+console.log('lets observer what xoring space with "a, b, c, D, E, F, 0, 1, 2, 3" does!');
+console.log(helpers.xorStrings('a', ' ').toString());
+console.log(helpers.xorStrings('b', ' ').toString());
+console.log(helpers.xorStrings('c', ' ').toString());
+console.log(helpers.xorStrings('D', ' ').toString());
+console.log(helpers.xorStrings('E', ' ').toString());
+console.log(helpers.xorStrings('F', ' ').toString());
+console.log(helpers.xorStrings('0', ' ').toString());
+console.log(helpers.xorStrings('1', ' ').toString());
+console.log(helpers.xorStrings('2', ' ').toString());
+console.log(helpers.xorStrings('3', ' ').toString());
+console.log('it flips case so it seams for letters!');
 
-function xor(a, b, hex){
-    var result = '';
-    console.log(arguments);
-    
-    if(hex === undefined) hex=false;
-    if(a === undefined || b === undefined) throw new Error('Too few arguments!, provide at least 2 strings');
-    if ( typeof a !== 'string' && typeof b !== 'string') throw new Error('Arguments must be strings!');
-    if (typeof hex !== 'boolean')throw new Error('3rd argument must be boolean!');
-    if(hex){
-        var reg = /^[0-9a-f]+$/gi;
-        if(!reg.test(a)) throw new Error('Not a hexadecimal string: ' + a);
-        console.log(reg.test(a));
-        if(!reg.test(b)) throw new Error('Not a hexadecimal string: ' + a);
-        console.log(reg.test(b));
-    }
-    
-    if(!hex){
-        a = stringToHex(a);
-        b = stringToHex(b);
-    }
-    var min_length = (a.length > b.length) ? b.length : a.length;
-    
-//    for(var i=0; i< min)
-    
-    
-    
-//    if(hex){
-//            a = hexToString(a);
-//            b = hexToString(b);
-//    }
-//    var min_length = (a.length > b.length) ? b.length : a.length;
-//    for(var i = 0; i < min_length; i++){  
-//        result += String.fromCharCode(a[i].charCodeAt(0).toString(10) ^ b[i].charCodeAt(0).toString(10));
-//    }
-//    return result;
-}
+//samples.forEach(function(sample){
+//   console.log(helpers.xorStringsInHex(toDecrypt, sample).toString());
+//});
 
 
-function xorStrings(a,b){
-    return xor.call(Object.create(null), a, b, false);
-}
 
-function xorStringsInHex(a,b){
-    return xor.call(Object.create(null), a, b, true);
-}
-
-function hexToString (hex) {
-    var string = '';
-    for (var i = 0; i < hex.length; i += 2) {
-      string += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-    }
-    return string;
-}
-
-function stringToHex (str){
-    return str.split('').map(function (elm){ return elm.charCodeAt(0).toString(16)}).join("");
-}
-
-function stringToBin (str){
-    return str.split('').map(function (elm){ return elm.charCodeAt(0).toString(2)}).join("");
-}
-
-
-function assert(condition, message) {
-    if (!condition) {
-        message = message || "Assertion failed";
-        if (typeof Error !== "undefined") {
-            throw new Error(message);
-        }
-        throw message; // Fallback
-    }
-}
-//tests
-try {
-    var result;
-    xorStringsInHex('123123', 'malina');
-    throw new Error('holder');
-    result = xorStrings(xorStrings('ahoj', 'jano'), 'ahoj');
-    assert(result === 'jano', 'jano failed');
-    result = xorStrings(xorStrings('message', 'keykey1'), 'keykey1');
-    assert(result === 'message', 'message failed');
-    result = xorStrings(xorStrings('keykey1', 'message'), 'message');
-    assert(result === 'keykey1', 'keykey1 failed');
-    result = xorStrings('123456', '12345').length;
-    assert(result.length != '12345'.length, 'length assertion failed');
-    result = stringToHex('this is a message');
-    assert(result === '746869732069732061206d657373616765', 'stringToHex(this is a message)');
-    result = stringToHex('this is another message');
-    assert(result === '7468697320697320616e6f74686572206d657373616765', 'stringToHex(this is another message)');
-    result = hexToString(stringToHex('this is a message'));
-    assert(result === 'this is a message', 'hexToString failed');
-    assert(xorStrings('message', 'keykey1') === xorStringsInHex(stringToHex('message'), stringToHex('keykey1')), 'xorStrings and xorStringsInHex do not match!')
-    //06000a18041e54
-    assert(stringToHex(xorStrings('message', 'keykey1')) === '06000a18041e54', 'failed to compare with python reference implementation, output not the same for xorStrings')
-    
-    
-    assert(xorStringsInHex('6d657373616765', '6b65796b657931') === xorStrings('message', 'jahoda'), 'xorStringsInHex not equal to xorStrings output!');
-    console.log(result);
-    assert(result === 'message', 'stringToHex(message) in xorStrings failed');
-    
-}
-catch (err){
-    console.error(err);
-    process.exit(1);
-}
-
-console.log(xor(xor('ahoj','jano'),'ahoj'));//testing implementation - should get back the same
-console.log(xor(' ','a'));
-console.log(xor(' ','A'));
-console.log(xor(' ','b'));
-console.log(xor(' ','B'));
-console.log(xor(' ','c'));
-console.log(xor(' ','C'));
-console.log(xor(' ','0'));
-console.log(xor(' ','1'));
-console.log(xor(' ','2'));
-console.log(xor('a','b'));
-console.log(xor('b','c'));
-console.log(xor('x','y'));
-console.log(xor('5','3'));
-console.log(stringToHex(' '));
-console.log(stringToHex('a'));
-console.log(' ' + stringToBin(' '));
-console.log(stringToBin('a'));
-    console.log(stringToBin(xor(' ','a')));
-console.log(xorStrings('a','a'));
-console.log(stringToBin(xorStrings('a','a')));
 
 function createBinaryPositionMap(str){
     //we simply create an array of bool as long as the string
@@ -157,34 +48,51 @@ function createBinaryPositionMap(str){
     return binaryPositionMap;
 }
 
-var binaryPositionMap = createBinaryPositionMap(toDecrypt);
 
-console.log('length of text to decipher is: ' + toDecrypt.length);
-samples.forEach(function (sample, index){
-    console.log('xoring sample[' + index +'] ')
+function findSpace(){
+    //it will xor with all and check if the xor has positions which match the regexp /[a-z]/gi
+    //the string will be iterated through character wise for every xor
+    //create a buffer initialised with 01 at every place, you will set the buffer place to buff[i] & currecnt position (set 1 if it matches regexp, 0 otherwise)
+    //could be an array of bools as well, and once you set position to false you ignore it
+}
 
-    var result = xorStringsInHex(sample, toDecrypt);
-//    console.log(result);
-    var reg = /[a-zA-Z]/;
-    for(var i=0; i < result.length; i++){
-        var candidateForSpaceInPlaneText;
-        if(reg.test(result.charAt(i)) || stringToHex(result.charAt(i)) === 0){
-           //if we are xoring with space we get a-zA-Z,
-           //so the plaintext has a space there
-           
-           
-        }
-//        else if(result.charAt(i).to)
-    }
-//    spaceIndexes.push(indexes);
-    //we need to find where are spaces in the toDecrypt text, we check if the 
-    
-});
-module.exports = global;
+function getWords(){
+    //once you find spaces you will be able to split the whole string to words and work with ' a ', ' an ' ' the ' etc to decrypt
+}
 
+function askForInput(){
+    //later when where are no digrams, etc found ask the user to identify different letters, what they might be, and run the whole xoring again
+    //repeat until readable
+}
 
-
-
-
-
-
+//    var binaryPositionMap = createBinaryPositionMap(toDecrypt);
+//
+//    console.log('length of text to decipher is: ' + toDecrypt.length);
+//    samples.forEach(function (sample, index){
+//        console.log('xoring sample[' + index +'] ')
+//
+//        var result = xorStringsInHex(sample, toDecrypt);
+//    //    console.log(result);
+//        var reg = /[a-zA-Z]/;
+//        for(var i=0; i < result.length; i++){
+//            var candidateForSpaceInPlaneText;
+//            if(reg.test(result.charAt(i)) || stringToHex(result.charAt(i)) === 0){
+//               //if we are xoring with space we get a-zA-Z,
+//               //so the plaintext has a space there
+//
+//
+//            }
+//    //        else if(result.charAt(i).to)
+//        }
+//    //    spaceIndexes.push(indexes);
+//        //we need to find where are spaces in the toDecrypt text, we check if the 
+//
+//    });
+//
+//
+//
+//
+//
+//
+//
+//
