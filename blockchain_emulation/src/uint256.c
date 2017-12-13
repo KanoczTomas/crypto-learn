@@ -5,14 +5,19 @@
 
 
 bool validate_uint256_string(char* s, size_t str_len){
-	int count = 0;	
+	size_t count = 0;	
+	printf("str_len = %zu\n", str_len);
 
-	if(str_len != 64 || str_len != 66) return false;
 	if(s[0] == '0' && s[1] == 'x') count = 2;
 
+	if(count == 0 && str_len != 64) return false;
+	else if(count == 2 && str_len != 66) return false;
+
+	if(count ==2) printf("there is 0x at the beginning\n");
+
 	for(; count < str_len; count++){
-		if(s[count] >= '0' && s[count] <= '9');
-		else if(tolower(s[count]) >= 'a' && tolower(s[count]) <= 'f');
+		if(s[count] >= '0' && s[count] <= '9') printf("%c is [0-9]\n", s[count]);
+		else if(tolower(s[count]) >= 'a' && tolower(s[count]) <= 'f') printf("%c is [a-f]\n", s[count]);
 		else return false;
 	}
 	return true;
