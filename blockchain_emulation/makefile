@@ -1,3 +1,2 @@
 all:
-	cd src
-	$(MAKE)
+	$(MAKE) -C src

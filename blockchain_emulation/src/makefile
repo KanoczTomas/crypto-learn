@@ -19,12 +19,12 @@ $(ODIR)/%.o: %.c  $(DEPS)
 $(TARGET): $(OBJECTS)
 	$(CC) $(INCLUDE) $(CFLAGS) $^ -o ../$@
 
-.PHONY: clean
 
 clean:
 	-rm $(ODIR)/*.o ../$(TARGET)
-	echo clean done
+	@echo clean done
 
+.PHONY: clean
 print:
 	$(info $$OBJECTS is [$(OBJECTS)])echo done
 
