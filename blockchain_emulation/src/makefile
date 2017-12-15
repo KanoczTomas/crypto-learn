@@ -1,19 +1,31 @@
 IDIR = ../include
 ODIR = obj
+TARGET = emulate
+
 CC = gcc
-CFLAGS = -I$(IDIR)
+CFLAGS = -g
+INCLUDE = -I$(IDIR)
 
 _DEPS = uint256.h
-DEPS = $(pathsubst %, $(IDIR)/%, $(_DEPS) )
+DEPS = $(patsubst %, $(IDIR)/%, $(_DEPS))
 
-_OBJ = uint256.o emulate.o
-OBJ = $(pathsubst %, $(ODIR)/%, $(_OBJ))
+SOURCES = uint256.c emulate.c
+_OBJECTS = $(patsubst %.c, %.o, $(SOURCES))
+OBJECTS = $(patsubst %, $(ODIR)/%, $(_OBJECTS))
 
-$(ODIR)/%.o: %.c $(DEPS)
-	$(CC) $(CFLAGS) $< -o $@ 
+$(ODIR)/%.o: %.c  $(DEPS)
+	$(CC) $(INCLUDE) $(CFLAGS) -c $< -o $@
 
-emulate: $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^
+$(TARGET): $(OBJECTS)
+	$(CC) $(INCLUDE) $(CFLAGS) $^ -o ../$@
 
-	
-	
+.PHONY: clean
+
+clean:
+	-rm $(ODIR)/*.o ../$(TARGET)
+	echo clean done
+
+print:
+	$(info $$OBJECTS is [$(OBJECTS)])echo done
+
+.PHONY: print 
